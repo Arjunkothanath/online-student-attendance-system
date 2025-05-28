@@ -1,0 +1,217 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Take Attendance</title>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@100..900&display=swap');
+        body {
+            margin: 0;
+            font-family: 'Roboto Condensed', sans-serif;
+            background-color: #f6f9ff;
+            color: #333;
+        }
+        .container {
+            display: flex;
+            height: 100vh;
+        }
+        .sidebar {
+            background-color: #ffffff;
+            color: rgb(9, 8, 8);
+            width: 13%;
+            padding: 20px;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+            padding-top: 10px;
+            height: 100%;
+            position: fixed;
+        }
+        .logo {
+            font-size: 40px;
+            margin-bottom: 20px;
+            color: #6a0dad;
+            font-family: "Roboto Condensed", serif;
+        }
+        .menu a {
+            text-decoration: none;
+            color: #6a0dad;
+        }
+        .menu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .menu-item {
+            margin: 15px 0;
+            cursor: pointer;
+            padding: 10px;
+            padding-left: 30px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+            color: #6a0dad;
+        }
+        .menu-item:hover {
+            color: #7e24d2;
+        }
+        .menu-item.active {
+            background-color: #6a0dad;
+            color: #fff;
+        }
+        .main-content {
+            margin-left: 240px;
+            width: calc(100% - 270px);
+            padding: 30px;
+        }
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #6a0dad;
+            font-size: 22px;
+            font-weight: bold;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #6a0dad;
+        }
+        .table-container {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            margin-top: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        th, td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: center;
+            font-size: 16px;
+        }
+        th {
+            background-color: #6a0dad;
+            color: white;
+        }
+        /* Updated Toggle Styling */
+        .toggle {
+            appearance: none;
+            width: 45px;
+            height: 22px;
+            background: #ccc;  /* off state */
+            border-radius: 25px;
+            position: relative;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .toggle:checked {
+            background: #6a0dad;  /* on state */
+        }
+        .toggle:before {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            top: 1px;
+            left: 2px;
+            transition: 0.3s;
+        }
+        .toggle:checked:before {
+            left: 22px;
+        }
+        .summary {
+            display: flex;
+            justify-content: space-between;
+            background: #6a0dad;
+            color: white;
+            padding: 12px;
+            margin-top: 15px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 8px;
+        }
+        .submit-btn {
+            background-color: #6a0dad;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            display: block;
+            margin: 20px auto 0;
+            transition: 0.3s;
+        }
+        .submit-btn:hover {
+            background-color: #5a0bb5;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <aside class="sidebar">
+            <h1 class="logo">OSAS</h1>
+            <ul class="menu">
+                <li class="menu-item active">Profile</li>
+                <a href="{% url 'stutimetable' %}"><li class="menu-item">Time Table</li></a>
+                <a href="{% url 'facattendance' %}"><li class="menu-item">Attendance</li></a>
+                <a href="{% url 'logout' %}"><li class="menu-item">Logout</li></a>
+            </ul>
+        </aside>
+        <main class="main-content">
+            <form method="POST">
+                {% csrf_token %}
+                <div class="header">
+                    <h2>Class: {{ class_info }} | Subject: {{ subject.name }} | Period: {{ period_number }}</h2>
+                </div>
+            
+                <div class="table-container">
+                    <table>
+                        <tr>
+                            <th>Roll No</th>
+                            <th>Student Name</th>
+                            <th>Status</th>
+                        </tr>
+                        {% for student in students %}
+                        <tr>
+                            <td>{{ student.studentid }}</td>
+                            <td>{{ student.fullname }}</td>
+                            <td>
+                                <input type="checkbox" name="student_{{ student.studentid }}" class="toggle" checked>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+            
+                    <div class="summary">
+                        <span>Total Students: {{ students|length }}</span>
+                        <span>Present Count: <span id="present-count">{{ students|length }}</span></span>
+                    </div>
+            
+                    <button type="submit" class="submit-btn">Submit Attendance</button>
+                </div>
+            </form>
+            
+            <script>
+                function updateCount() {
+                    const toggles = document.querySelectorAll('.toggle:checked');
+                    document.getElementById('present-count').textContent = toggles.length;
+                }
+                document.querySelectorAll('.toggle').forEach(toggle => {
+                    toggle.addEventListener('click', updateCount);
+                });
+            </script>
+            
+        </main>
+    </div>
+    
+    
+</body>
+</html>

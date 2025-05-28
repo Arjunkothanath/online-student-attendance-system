@@ -1,0 +1,378 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Time Table</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@100..900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400..900&display=swap');
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f6f9ff;
+            color: #333;
+        }
+
+        .container {
+            display: flex;
+            height: 100vh;
+            flex-direction: column;
+            justify-content: space-between;
+            width: 100%;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            background-color: #ffffff;
+            color: rgb(9, 8, 8);
+            width: 13%;
+            padding: 20px;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+            padding-top: 10px;
+            height: 100%;
+            position: fixed;
+        }
+
+        .logo {
+            font-size: 40px;
+            margin-bottom: 20px;
+            color: #6a0dad;
+            font-family: "Roboto Condensed", serif;
+        }
+
+        .menu a {
+            text-decoration: none;
+            color: #6a0dad;
+        }
+
+        .menu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .menu-item {
+            margin: 15px 0;
+            cursor: pointer;
+            padding: 10px;
+            padding-left: 30px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+            color: #6a0dad;
+        }
+
+        .menu-item:hover {
+            color: #7e24d2;
+        }
+
+        .menu-item.active {
+            background-color: #6a0dad;
+            color: #fff;
+        }
+
+        /* Main Content */
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            width: 80%;
+            margin-left: auto;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #6a0dad;
+            padding-left: 5px;
+            font-family: "Roboto Condensed", serif;
+            font-size: 20px;
+        }
+
+        .content {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 8px;
+        }
+
+
+        .btn {
+            background-color: #6a0dad;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .btn:hover {
+            background-color: #7e24d2;
+        }
+
+        
+
+        .section{
+            display: flex;
+            flex-direction: row;
+            height: 70%;
+            gap: 50px;
+            width: 100%;
+            margin-top: 5%;
+            justify-content: flex-start;
+        }
+        
+        .input-box {
+            display: flex;
+            flex-direction: column;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            width: 40%;
+            height: 100%;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            
+        }
+        .input-box input[type="text"], 
+        .input-box select {
+            width: 100%;  /* Ensures all elements take full width of the container */
+            padding: 10px;  
+            margin: 5px 0;  
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            text-align: center;  
+            font-size: 16px;
+            box-sizing: border-box; /* Ensures padding doesn’t affect width */
+        }
+
+        .sub-btn {
+            background-color: #6a0dad;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .sub-btn:hover {
+            background-color: #7e24d2;
+        }
+
+        .timetable-box{
+            margin-top: 5%;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            width: 30%;
+
+            align-self: center;
+        }
+
+        /* Row */
+        .row {
+            display: flex;
+            align-items: center;
+            width: 100%;
+        }
+
+        /* Day Column (Same size as subjects) */
+        .day {
+            width: 150px;
+            height: 50px;
+            text-align: center;
+            background: #6a0dad;
+            color: white;
+            padding: 15px;
+            font-weight: bold;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Subject Boxes */
+        .subject {
+            flex: 0.5;
+            height: 60px;
+            text-align: center;
+            background: #D6DEFF;
+            padding: 15px;
+            font-weight: bold;
+            border-radius: 5px;
+            margin-left: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Interval Gaps */
+        .gap {
+            flex: 0.2;
+        }
+
+        /* Friday Adjustment */
+        .large-box {
+            flex: 1.;  /* Stretch last 2 subject boxes */
+        }
+        #day1{
+            border-top-left-radius: 18px;
+        }
+        #day5{
+            border-bottom-left-radius: 18px;
+        }
+        #sub1{
+            border-top-right-radius: 18px;
+        }
+        #sub2{
+            border-bottom-right-radius: 18px;
+        }
+        /* Table Styling */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+table, th, td {
+    border: 1px solid #ddd;
+}
+
+th, td {
+    padding: 10px;
+    text-align: center;
+    font-size: 16px;
+}
+
+th {
+    background-color: #6a0dad;
+    color: white;
+    font-weight: bold;
+}
+
+tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+tr:hover {
+    background-color: #e1d6ff;
+    transition: 0.3s;
+}
+
+/* Timetable File Input Styling */
+input[type="file"] {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f8f8ff;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+input[type="file"]:hover {
+    border-color: #6a0dad;
+}
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <aside class="sidebar">
+            <h1 class="logo">OSAS</h1>
+            <ul class="menu">
+                <a href="{% url 'faculty' %}"><li class="menu-item">Faculty Registration</li></a>
+                <a href="{% url 'subject' %}"><li class="menu-item">Add Subjects</li></a>
+                <a href="{% url 'student' %}"><li class="menu-item">Students Registration</li></a>
+                
+                <li class="menu-item active">Add Time Table</li>
+                <a href="{% url 'logout' %}"><li class="menu-item">Logout</li></a>
+            </ul>
+        </aside>
+        
+        <main class="main-content">
+            <header class="header">
+                <h2>Add TimeTable</h2>
+                <div class="user-profile">
+                    <span>Hi, {{ request.session.full_name }}</span>
+                </div>
+            </header>
+            <div class="section">
+                <!-- Form for uploading Excel file -->
+                <div class="input-box">
+                    <h3>Upload Timetable</h3>
+                    <form method="POST" action="{% url 'save_timetable' %}" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <label for="class_info">Select Class:</label>
+                        <select name="class_info" required>
+                            {% for cls in classes %}
+                                <option value="{{ cls.id }}">{{ cls }}</option>
+                            {% endfor %}
+                        </select>
+                        <br>
+                        <label for="timetable_file">Upload Excel File:</label>
+                        <input type="file" name="timetable_file" accept=".xls, .xlsx" required>
+                        <br>
+                        <button type="submit" class="btn">Submit</button>
+                    </form>
+                </div>
+            
+                <!-- Example Timetable Display -->
+                <div class="timetable-box">
+                    <h3>Example Timetable Format</h3>
+            <table border="1">
+                <thead>
+                    <tr>
+                        <th>Day</th>
+                        <th>Period</th>
+                        <th>Subject Code</th>
+                        <th>Faculty ID</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Monday</td>
+                        <td>1</td>
+                        <td>CS101</td>
+                        <td>FAC001</td>
+                    </tr>
+                    <tr>
+                        <td>Monday</td>
+                        <td>2</td>
+                        <td>CS102</td>
+                        <td>FAC002</td>
+                    </tr>
+                    <tr>
+                        <td>Tuesday</td>
+                        <td>1</td>
+                        <td>MA201</td>
+                        <td>FAC003</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p><strong>Note:</strong> Please upload an Excel file with the above structure.</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    
+    
+</body>
+</html>

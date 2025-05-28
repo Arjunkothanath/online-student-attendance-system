@@ -1,0 +1,294 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Subjects</title>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@100..900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400..900&display=swap');
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f6f9ff;
+            color: #333;
+        }
+
+        .container {
+            display: flex;
+            height: 100vh;
+            flex-direction: column;
+            justify-content: space-between;
+            width: 100%;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            background-color: #ffffff;
+            color: rgb(9, 8, 8);
+            width: 13%;
+            padding: 20px;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+            padding-top: 10px;
+            height: 100%;
+            position: fixed;
+        }
+
+        .logo {
+            font-size: 40px;
+            margin-bottom: 20px;
+            color: #6a0dad;
+            font-family: "Roboto Condensed", serif;
+        }
+
+        .menu a {
+            text-decoration: none;
+            color: #6a0dad;
+        }
+
+        .menu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .menu-item {
+            margin: 15px 0;
+            cursor: pointer;
+            padding: 10px;
+            padding-left: 30px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+            color: #6a0dad;
+        }
+
+        .menu-item:hover {
+            color: #7e24d2;
+        }
+
+        .menu-item.active {
+            background-color: #6a0dad;
+            color: #fff;
+        }
+
+        /* Main Content */
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            width: 80%;
+            margin-left: auto;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #6a0dad;
+            padding-left: 5px;
+            font-family: "Roboto Condensed", serif;
+            font-size: 20px;
+        }
+
+        .content {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 8px;
+        }
+
+        .dropdown {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 200px;
+        }
+
+        /* Custom Add Faculties Button */
+        .custom-file-upload {
+            display: inline-block;
+            padding: 10px 15px;
+            background-color: #6a0dad;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            text-align: center;
+            transition: background-color 0.3s;
+        }
+
+        .custom-file-upload:hover {
+            background-color: #7e24d2;
+        }
+
+        /* Hide the default file input */
+        #subject_file {
+            display: none;
+        }
+
+        .btn {
+            background-color: #6a0dad;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .btn:hover {
+            background-color: #7e24d2;
+        }
+
+        /* File View Section */
+        .file-view {
+            margin-top: 10px;
+        }
+
+        .file-view a {
+            color: #6a0dad;
+            text-decoration: none;
+        }
+
+        .file-view a:hover {
+            text-decoration: underline;
+        }
+
+        .section{
+            display: flex;
+            flex-direction: row;
+            height: 100%;
+            justify-content: center;
+            gap: 20px;
+        }
+        .left-section, .right-section {
+            width: 40%;
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .left-section{
+            display: flex;
+            flex-direction: column;
+            align-content: center;
+            align-items: center;
+            padding-top: 30px;
+        }
+        .right-section {
+            width: 50%;
+            text-align: left;
+            border-left: 2px solid #ddd;
+        }
+        .btn {
+            background-color: #6a0dad;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .btn:hover {
+            background-color: #7e24d2;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 8px;
+            text-align: center;
+        }
+        th {
+            background-color: #6a0dad;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <aside class="sidebar">
+            <h1 class="logo">OSAS</h1>
+            <ul class="menu">
+                <a href="{% url 'faculty' %}"><li class="menu-item">Faculty Registration</li></a>
+                <li class="menu-item active">Add Subjects</li>
+                <a href="{% url 'student' %}"><li class="menu-item">Students Registration</li></a>
+                <a href="{% url 'timetable' %}"><li class="menu-item">Add Time Table</li></a>
+                <a href="{% url 'logout' %}"><li class="menu-item">Logout</li></a>
+            </ul>
+        </aside>
+        
+        <main class="main-content">
+            <header class="header">
+                <h2>Add Subject</h2>
+                <div class="user-profile">
+                    <span>Hi, {{ request.session.full_name }}</span>
+                </div>
+            </header>
+            
+            <div class="section">
+                <div class="left-section">
+                    <h2>Upload Subjects & Faculties</h2>
+                    <form method="POST" enctype="multipart/form-data" action="{% url 'upload_subjects' %}">
+                        {% csrf_token %}
+                        <input type="file" name="subject_file" id="subject_file" accept=".csv, .xls, .xlsx">
+                        <label for="subject_file" class="custom-file-upload">Add Subjects</label>
+                        <button type="submit" class="btn">Upload</button>
+                    </form>
+                </div>
+                
+                <div class="right-section">
+                    <h3>Example Excel Format</h3>
+                    <table>
+                        <tr>
+                            <th>Subject</th>
+                            <th>Department</th>
+                            <th>Subject Code</th>
+                            <th>Semester</th>
+                            <th>Faculty IDs</th>
+                        </tr>
+                        <tr>
+                            <td>Data Structures</td>
+                            <td>CS101</td>
+                            <td>CSE</td>
+                            <td>8</td>
+                            <td>FAC005, FAC002</td>
+                        </tr>
+                        <tr>
+                            <td>Algorithms</td>
+                            <td>CS102</td>
+                            <td>ER</td>
+                            <td>3</td>
+                            <td>FAC004</td>
+                        </tr>
+                        <tr>
+                            <td>Operating Systems</td>
+                            <td>CS103</td>
+                            <td>CSE</td>
+                            <td>7</td>
+                            <td>FAC001</td>
+                        </tr>
+                    </table>
+                    <p><a href="{% static 'sample_subjects.xlsx' %}" download>Download Sample Excel File</a></p>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+</html>

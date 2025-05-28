@@ -1,0 +1,249 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attendance Sheet</title>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@100..900&display=swap');
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f6f9ff;
+            color: #333;
+            display: flex;
+        }
+
+        .sidebar {
+            background-color: #ffffff;
+            color: rgb(9, 8, 8);
+            width: 13%;
+            padding: 20px;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .logo {
+            font-size: 40px;
+            margin-bottom: 20px;
+            color: #6a0dad;
+            font-family: "Roboto Condensed", serif;
+        }
+
+        .menu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .menu a {
+            text-decoration: none;
+            color: #6a0dad;
+        }
+
+        .menu-item {
+            margin: 15px 0;
+            cursor: pointer;
+            padding: 10px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+            color: #6a0dad;
+        }
+
+        .menu-item:hover {
+            color: #7e24d2;
+        }
+
+        .menu-item.active {
+            color: #ffffff;
+            background-color: #6a0dad;
+            
+        }
+
+        .content {
+            margin-top: 3%;
+            margin-left: 12%;
+            margin-right: 10px;
+            padding-left: 5%;
+            width: 100%
+        }
+
+        .header {
+            text-align: center;
+            color: #6a0dad;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        select, button {
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            background-color: #6a0dad;
+            color: white;
+            cursor: not-allowed;
+            transition: 0.3s;
+        }
+
+        button.enabled {
+            cursor: pointer;
+            background-color: #7e24d2;
+        }
+        .class-select{
+            width: 160px;
+            height: 30px;
+            border: 2px solid #6a0dad;
+            padding: 2px;
+        }
+
+        table {
+            margin-top: 15px;
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        th, td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+            text-align: center;
+        }
+
+        th {
+            background-color: #6a0dad;
+            color: white;
+        }
+
+        .print-btn {
+            margin-top: 20px;
+            background-color: #6a0dad;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            display: block;
+            text-align: center;
+            width: fit-content;
+        }
+
+    </style>
+</head>
+<body>
+    <aside class="sidebar">
+        <h1 class="logo">OSAS</h1>
+        <ul class="menu">
+            <li class="menu-item"><a href="{% url 'profilefac' %}">Profile</a></li>
+            <li class="menu-item"><a href="{% url 'factimetable' %}">Time Table</a></li>
+            <li class="menu-item active">Attendance</li>
+            <li class="menu-item"><a href="{% url 'logout' %}">Logout</a></li>
+        </ul>
+    </aside>
+
+    <div class="content">
+        <h2 class="header">Faculty Attendance Sheet</h2>
+    
+        <form method="GET" action="{% url 'facattendance' %}">
+            <select name="class_id" class="class-select" onchange="this.form.submit()">
+                <option value="">Select Class</option>
+                {% for class in classes %}
+                <option value="{{ class.id }}" {% if selected_class_id == class.id %}selected{% endif %}>
+                    {{ class.department.code }} Sem {{ class.semester.number }} {{ class.division.name }}
+                </option>
+                {% endfor %}
+            </select>
+        </form>
+    
+        {% if attendance_data %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Student Name</th>
+                    <th>Student ID</th>
+                    <th>Class</th>
+                    <th>Subject</th>
+                    <th>Total Hours</th>
+                    <th>Hours Present</th>
+                    <th>Hours Absent</th>
+                    <th>Percentage</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for record in attendance_data %}
+                <tr>
+                    <td>{{ record.student_name }}</td>
+                    <td>{{ record.student_id }}</td>
+                    <td>{{ record.class }}</td>
+                    <td>{{ record.subject }}</td>
+                    <td>{{ record.total_hours }}</td>
+                    <td>{{ record.total_present }}</td>
+                    <td>{{ record.total_absent }}</td>
+                    <td>{{ record.percentage }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="8" style="text-align: center; font-weight: bold;">No attendance records found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    
+        <button class="print-btn" onclick="printContent()">Print</button>
+        {% else %}
+        <p style="text-align:center; font-weight:bold;">Select a class to view attendance.</p>
+        {% endif %}
+    </div>
+    
+    
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const departmentSelect = document.getElementById("department");
+            const divisionSelect = document.getElementById("division");
+            const showAttendanceBtn = document.getElementById("showAttendance");
+
+            function checkSelections() {
+                if (departmentSelect.value && divisionSelect.value) {
+                    showAttendanceBtn.disabled = false;
+                    showAttendanceBtn.classList.add("enabled");
+                } else {
+                    showAttendanceBtn.disabled = true;
+                    showAttendanceBtn.classList.remove("enabled");
+                }
+            }
+
+            departmentSelect.addEventListener("change", checkSelections);
+            divisionSelect.addEventListener("change", checkSelections);
+        });
+        function printContent() {
+            var content = document.querySelector(".content").innerHTML; // Get the content inside .content div
+            var originalBody = document.body.innerHTML; // Store the full page content
+        
+            document.body.innerHTML = content; // Replace body with only the content
+            window.print(); // Trigger print
+            document.body.innerHTML = originalBody; // Restore the original page after printing
+            location.reload(); // Reload to restore JavaScript and events
+        }
+        
+        
+    </script>
+</body>
+</html>

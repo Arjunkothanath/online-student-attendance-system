@@ -1,0 +1,68 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="{% static 'styleregister.css'%}">
+</head>
+<body>
+    <div class="body-content">
+        <div class="left-box">
+          <div class="logo">
+            <div class="osas">OSAS</div>
+            <img class="raise-a-hand-to-answer" src="{% static 'raise-a-hand-to-answer0.png'%}" />
+          </div>
+          <div class="heading">
+            <span>Online Student</span>
+            <span>Attendance System</span>
+            <div class="subheading">
+              <span>Streamlining Student Attendance </span>
+              <span>Management with Efficiency and Accuracy</span>
+            </div>
+          </div>
+    
+        </div>
+        <div class="right-box">
+          <div class="message">
+            <h1>Create Admin Account<h1>
+          </div>
+            <div class="container">
+              <form action="" method="post">
+                {% csrf_token %}
+                <div class="user-details">
+                    <div class="user-login" id="fullname-user">
+                        <label for="fullname">Fullname</label>
+                        <input type="text" name="fullname" id="fullname" placeholder="Name" required>
+                    </div>
+                    <div class="user-login" id="username-user">
+                        <label for="username">Username</label>
+                        <input type="text" name="username" id="username" placeholder="Username" required>
+                    </div>
+                    <div class="user-login" id="password-user">
+                        <label for="password">Password</label>
+                        <input type="password" name="password" id="password" placeholder="Create Password" required>
+                    </div>
+                    <div class="user-login" id="confirm-password-user">
+                        <label for="confirm_password">Confirm Password</label>
+                        <input type="password" name="confirm_password" id="confirm_password" placeholder="Confirm Password" required>
+                    </div>
+                </div>
+                <div class="signin-btn">
+                    <button type="submit">Sign Up</button>
+                </div>
+            </form>
+            {% if messages %}
+                <div>
+                    {% for message in messages %}
+                        <div class="alert-message {% if message.tags %}{{ message.tags }}{% endif %}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+            </div>
+          </div>
+</body>
+</html>

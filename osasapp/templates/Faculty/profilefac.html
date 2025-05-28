@@ -1,0 +1,367 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Profile</title>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@100..900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400..900&display=swap');
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f6f9ff;
+            color: #333;
+        }
+
+        .container {
+            display: flex;
+            height: 100vh;
+            flex-direction: column;
+            justify-content: space-between;
+            width: 100%;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            background-color: #ffffff;
+            color: rgb(9, 8, 8);
+            width: 13%;
+            padding: 20px;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+            padding-top: 10px;
+            height: 100%;
+            position: fixed;
+        }
+
+        .logo {
+            font-size: 40px;
+            margin-bottom: 20px;
+            color: #6a0dad;
+            font-family: "Roboto Condensed", serif;
+        }
+
+        .menu a {
+            text-decoration: none;
+            color: #6a0dad;
+        }
+
+        .menu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .menu-item {
+            margin: 15px 0;
+            cursor: pointer;
+            padding: 10px;
+            padding-left: 30px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+            color: #6a0dad;
+        }
+
+        .menu-item:hover {
+            color: #7e24d2;
+        }
+
+        .menu-item.active {
+            background-color: #6a0dad;
+            color: #fff;
+        }
+
+        /* Main Content */
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            width: 80%;
+            margin-left: auto;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #6a0dad;
+            padding-left: 5px;
+            font-family: "Roboto Condensed", serif;
+            font-size: 20px;
+        }
+
+        .content {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+
+        
+
+        
+        .btn {
+            background-color: #6a0dad;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .btn:hover {
+            background-color: #7e24d2;
+        }
+
+
+        .section{
+            margin-top: 6%;
+            display: flex;
+            flex-direction: row;
+            height: 100%;
+            justify-content: center;
+            gap: 20px;
+        }
+        .left-section {
+            width: 80%;
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            gap: 20px;
+            display: flex;
+            flex-direction: column;
+            align-content: center;
+            padding-top: 40px;
+            align-items: center;
+            background: white;
+            padding: 30px;
+            display: flex;
+            border-radius: 15px;
+            box-shadow: 10px 10px 15px rgba(67, 1, 82, 0.1);
+            text-align: left;
+            justify-content: space-evenly;
+        }
+        
+        /* Profile Image */
+        .profile-image {
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            background: gray;
+            border: 2px solid #6a0dad;
+        }
+        .profile-info{
+            width: 80%;
+            text-align: left;
+            color: #6a0dad;
+            font-size: 30px;
+            justify-content: space-between;
+        }
+        /* Profile Info */
+        .top h1 {
+            color: purple;
+            margin-bottom: 10px;
+        }
+        .top{
+            margin-top: 30px;
+            width: 80%;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-around;
+            
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <aside class="sidebar">
+            <h1 class="logo">OSAS</h1>
+            <ul class="menu">
+                <li class="menu-item active">Profile</li>
+                <a href="{% url 'factimetable' %}"><li class="menu-item">Time Table</li></a>
+                <a href="{% url 'facattendance' %}"><li class="menu-item">Attendance</li></a>
+                <a href="{% url 'logout' %}"><li class="menu-item">Logout</li></a>
+            </ul>
+        </aside>
+        
+        <main class="main-content">
+            <header class="header">
+                <h2>Your Profile</h2>
+                <div class="user-profile">
+                    
+                <button onclick="openDutyLeaveModal()" class="btn-duty-leave">Apply Duty Leave</button>
+                <div id="dutyLeaveModal" class="modal">
+                    <div class="modal-content">
+                        <span class="close" onclick="closeDutyLeaveModal()">&times;</span>
+                        <h2>Apply for Duty Leave</h2>
+                        <form method="POST" action="{% url 'apply_duty_leave' %}">
+                            {% csrf_token %}
+                            <label>Select Leave Periods:</label>
+                            
+                            <div class="checkbox-container">
+                                {% for period in faculty_timetable_today %}
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" name="leave_periods" value="{{ period.id }}"> 
+                                        Period {{ period.period }} - {{ period.subject.name }} ({{ period.class_info }})
+                                    </label>
+                                {% empty %}
+                                    <p>No classes scheduled today.</p>
+                                {% endfor %}
+                            </div>
+                            <button type="submit" class="btn-submit">Submit</button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- ✅ CSS for Duty Leave Modal and Button -->
+                <style>
+                    .modal {
+                        display: none;
+                        position: fixed;
+                        z-index: 1000;
+                        left: 0;
+                        top: 0;
+                        width: 100%;
+                        height: 100%;
+                        background-color: rgba(0, 0, 0, 0.5);
+                        
+                        align-items: center;
+                        justify-content: center;
+                    }
+
+                    .modal-content {
+                        background-color: white;
+                        padding: 20px;
+                        width: 350px;
+                        border-radius: 10px;
+                        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+                        text-align: center;
+                        position: relative;
+                    }
+
+                    .close {
+                        position: absolute;
+                        right: 15px;
+                        top: 10px;
+                        font-size: 20px;
+                        font-weight: bold;
+                        cursor: pointer;
+                    }
+
+                    .modal-content {
+                        background-color: white;
+                        padding: 20px;
+                        width: 60%;  /* ✅ Make modal fill about 60% of screen */
+                        max-width: 600px; /* Prevent it from getting too wide on larger screens */
+                        border-radius: 10px;
+                        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+                        text-align: center;
+                        position: relative;
+                    }
+                    
+                    .checkbox-container {
+                        display: flex;
+                        flex-direction: column; /* ✅ Display periods in column */
+                        gap: 10px; /* Add spacing between checkboxes */
+                        text-align: left;
+                        margin: 20px auto;
+                        width: 80%; /* ✅ Make it fill most of the modal width */
+                    }
+                    
+                    .checkbox-label {
+                        display: flex;
+                        align-items: center;
+                        gap: 10px;
+                        background: #f9f9f9; /* Light background for better visibility */
+                        padding: 10px;
+                        border-radius: 5px;
+                        border: 1px solid #ddd;
+                        transition: background 0.3s;
+                    }
+                    
+                    .checkbox-label:hover {
+                        background: #e8dff7; /* Subtle hover effect */
+                    }
+                    
+                    input[type="checkbox"] {
+                        transform: scale(1.2); /* Make checkboxes slightly larger */
+                        cursor: pointer;
+                    }
+                    
+
+                    .btn-submit {
+                        background-color: #6a0dad;
+                        color: white;
+                        padding: 10px 15px;
+                        border: none;
+                        border-radius: 5px;
+                        margin-top: 15px;
+                        cursor: pointer;
+                        transition: background-color 0.3s;
+                    }
+
+                    .btn-submit:hover {
+                        background-color: #7e24d2;
+                    }
+
+                    .btn-duty-leave {
+                        background-color: #ab41f9;
+                        color: white;
+                        padding: 10px 15px;
+                        border: none;
+                        border-radius: 5px;
+                        margin-top: 15px;
+                        cursor: pointer;
+                        transition: background-color 0.3s;
+                    }
+
+                    .btn-duty-leave:hover {
+                        background-color: #7e24d2;
+                    }
+                </style>
+
+                <!-- ✅ JavaScript to Open & Close Modal -->
+                <script>
+                    function openDutyLeaveModal() {
+                        document.getElementById('dutyLeaveModal').style.display = 'flex';
+                    }
+
+                    function closeDutyLeaveModal() {
+                        document.getElementById('dutyLeaveModal').style.display = 'none';
+                    }
+                    
+                </script>
+
+
+                </div>
+            </header>
+            
+            <div class="section">
+                <div class="left-section">
+                    
+                    <div class="top">
+                        <div class="profile-image"></div>
+                        <h1><span>Hi, {{ request.session.full_name }}</span></h1>
+                    </div>
+                    <div class="profile-info">
+                        <p><strong>Student Id :</strong> {{ facultyid }}</p>
+                        <p><strong>Department :</strong> {{ department }}</p>
+                        
+                    </div>
+                    
+                </div>
+                
+                
+            </div>
+        </main>
+    </div>
+</body>
+
+</html>

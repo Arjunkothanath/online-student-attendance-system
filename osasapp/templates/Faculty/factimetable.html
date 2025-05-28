@@ -1,0 +1,400 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Faculty Timetable</title>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@100..900&display=swap');
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f6f9ff;
+            color: #333;
+            display: flex;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            background-color: #ffffff;
+            color: rgb(9, 8, 8);
+            width: 13%;
+            padding: 20px;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .logo {
+            font-size: 40px;
+            margin-bottom: 20px;
+            color: #6a0dad;
+            font-family: "Roboto Condensed", serif;
+        }
+
+        .menu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .menu a {
+            text-decoration: none;
+            color: #6a0dad;
+        }
+
+        .menu-item {
+            margin: 15px 0;
+            cursor: pointer;
+            padding: 10px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+            color: #6a0dad;
+        }
+
+        .menu-item:hover {
+            color: #7e24d2;
+        }
+
+        .menu-item.active {
+            background-color: #6a0dad;
+            color: #fff;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex-grow: 1;
+            width: 100%;
+            padding: 20px;
+            margin-left: 100px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #6a0dad;
+            font-family: "Roboto Condensed", serif;
+            font-size: 24px;
+            margin-bottom: 15px;
+            padding-left: 10%;
+        }
+        .header .btn {
+            padding: 8px 15px;
+            font-size: 14px;
+            border: none;
+            background-color: #6a0dad;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .header button:hover {
+            background-color: #7e24d2;
+        }
+        button{
+            background-color: #6a0dad;
+        }
+
+        .section {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            width: 100%;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        /* Row */
+        .section {
+            width: 100%;
+        }
+        
+        .row {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            margin-bottom: 5px;
+        }
+        
+        .row a {
+            text-decoration: none;
+            color: black;
+        }
+        
+        /* Day Column */
+        .day {
+            width: 130px;
+            height: 60px;
+            text-align: center;
+            background: #6a0dad;
+            color: white;
+            padding: 15px;
+            font-weight: bold;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        /* Subject Boxes (Periods) */
+        .subject {
+            flex: 1;
+            height: 60px;
+            text-align: center;
+            background: #D6DEFF; /* ✅ Background color applied */
+            padding: 15px;
+            font-weight: bold;
+            border-radius: 5px;
+            margin-left: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        /* Styling for "No Class" periods */
+        .no-class {
+            background: #D6DEFF; /* ✅ Ensures "No Class" has the same background */
+            color: #555; /* Slightly darker text for differentiation */
+        }
+        
+        /* Gaps */
+        .gap {
+            flex: 0.2;
+        }
+        
+        /* Friday Adjustment */
+        .large-box {
+            flex: 1.76;
+        }
+        
+        /* Rounded Corners for Specific Days/Subjects */
+        #day1 {
+            border-top-left-radius: 18px;
+        }
+        #day5 {
+            border-bottom-left-radius: 18px;
+        }
+        #sub1 {
+            border-top-right-radius: 18px;
+        }
+        #sub2 {
+            border-bottom-right-radius: 18px;
+        }
+        
+    </style>
+    <style>
+    /* Modal Background */
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* Modal Content */
+    .modal-content {
+        background-color: white;
+        padding: 20px;
+        width: 350px;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        text-align: center;
+    }
+
+    /* Close Button */
+    .close {
+        position: absolute;
+        right: 15px;
+        top: 10px;
+        font-size: 20px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    /* Dropdown Styling */
+    .dropdown {
+        width: 100%;
+        padding: 10px;
+        margin-top: 10px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+    }
+
+    /* Submit Button */
+    .btn-submit {
+        background-color: #6a0dad;
+        color: white;
+        padding: 10px 15px;
+        border: none;
+        border-radius: 5px;
+        margin-top: 15px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    .btn-submit:hover {
+        background-color: #7e24d2;
+    }
+    #goSubstitutionBtn, .btn-class{
+        background-color: #6a0dad;
+        color: white;
+        padding: 10px 15px;
+        border: none;
+        border-radius: 5px;
+        margin-top: 15px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+    #goSubstitutionBtn:hover, .btn-class:hover{
+        background-color: #7e24d2;
+    }
+    .section {
+        width: 100%;
+    }
+    
+    .row {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        margin-bottom: 5px;
+    }
+    
+    .row a {
+        text-decoration: none;
+        color: black;
+    }
+    
+    /* Day Column */
+    .day {
+        width: 130px;
+        height: 60px;
+        text-align: center;
+        background: #6a0dad;
+        color: white;
+        padding: 15px;
+        font-weight: bold;
+        border-radius: 5px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    /* Subject Boxes (Periods) */
+    .subject {
+        flex: 1;
+        height: 60px;
+        text-align: center;
+        background: #D6DEFF; /* ✅ Background color applied */
+        padding: 15px;
+        font-weight: bold;
+        border-radius: 5px;
+        margin-left: 5px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    /* Styling for "No Class" periods */
+    .no-class {
+        background: #D6DEFF; /* ✅ Ensures "No Class" has the same background */
+        color: #555; /* Slightly darker text for differentiation */
+    }
+    
+    /* Gaps */
+    .gap {
+        flex: 0.2;
+    }
+    
+    /* Friday Adjustment */
+    .large-box {
+        flex: 1.76;
+    }
+    
+    /* Rounded Corners for Specific Days/Subjects */
+    #day1 {
+        border-top-left-radius: 18px;
+    }
+    #day5 {
+        border-bottom-left-radius: 18px;
+    }
+    #sub1 {
+        border-top-right-radius: 18px;
+    }
+    #sub2 {
+        border-bottom-right-radius: 18px;
+    }
+    
+    
+</style>
+</head>
+<body>
+    <aside class="sidebar">
+        <h1 class="logo">OSAS</h1>
+        <ul class="menu">
+            <a href="{% url 'profilefac' %}"><li class="menu-item">Profile</li></a>
+            <li class="menu-item active">Time Table</li>
+            <a href="{% url 'facattendance' %}"><li class="menu-item">Attendance</li></a>
+            <a href="{% url 'logout' %}"><li class="menu-item">Logout</li></a>
+        </ul>
+    </aside>
+    
+    <main class="main-content">
+        <header class="header">
+            <a href="{% url 'class_timetable' %}"><button class="btn-class">Class Timetable</button></a>
+            <h2>Class Timetable</h2>
+            
+            <a href="{% url 'goSubstitute' %}">
+                <button id="goSubstitutionBtn">Go Substitution</button>
+            </a>
+           
+
+
+
+        </header>
+        
+        <div class="section">
+            {% now "l" as today %} {# Get current day #}
+        
+            {% for day, periods in timetable_data.items %}
+                <div class="row">
+                    <div class="day" id="day{{ forloop.counter }}" {% if day == today %}style="background-color: #ab41f9; color: white;"{% endif %}>
+                        {{ day }}
+                    </div>
+                    {% for period in periods %}
+                        {% if period.no_class %}
+                            <div class="subject no-class">No Class</div>
+                        {% else %}
+                            <a href="{% url 'takeattendance' period_number=period.period class_id=period.class_id subject_id=period.subject_id %}">
+                                <div class="subject" id="sub{{ forloop.counter }}">
+                                    {{ period.subject_code }} {{ period.department_code }} Sem {{ period.semester }} {{ period.division }}
+                                </div>
+                            </a>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            {% endfor %}
+        </div>
+        
+        
+        
+        
+        
+    </main>
+</body>
+</html>

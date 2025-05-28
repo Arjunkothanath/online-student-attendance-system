@@ -1,0 +1,318 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Faculty Registration</title>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@100..900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400..900&display=swap');
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f6f9ff;
+            color: #333;
+        }
+
+        .container {
+            display: flex;
+            height: 100vh;
+            flex-direction: column;
+            justify-content: space-between;
+            width: 100%;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            background-color: #ffffff;
+            color: rgb(9, 8, 8);
+            width: 13%;
+            padding: 20px;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+            padding-top: 10px;
+            height: 100%;
+            position: fixed;
+        }
+
+        .logo {
+            font-size: 40px;
+            margin-bottom: 20px;
+            color: #6a0dad;
+            font-family: "Roboto Condensed", serif;
+        }
+
+        .menu a {
+            text-decoration: none;
+            color: #6a0dad;
+        }
+
+        .menu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .menu-item {
+            margin: 15px 0;
+            cursor: pointer;
+            padding: 10px;
+            padding-left: 30px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+            color: #6a0dad;
+        }
+
+        .menu-item:hover {
+            color: #7e24d2;
+        }
+
+        .menu-item.active {
+            background-color: #6a0dad;
+            color: #fff;
+        }
+
+        /* Main Content */
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            width: 80%;
+            margin-left: auto;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #6a0dad;
+            padding-left: 5px;
+            font-family: "Roboto Condensed", serif;
+            font-size: 20px;
+        }
+
+        .content {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 8px;
+        }
+
+        .dropdown {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 200px;
+        }
+
+        /* Custom Add Faculties Button */
+        .custom-file-upload {
+            display: inline-block;
+            padding: 10px 15px;
+            background-color: #6a0dad;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            text-align: center;
+            transition: background-color 0.3s;
+        }
+
+        .custom-file-upload:hover {
+            background-color: #7e24d2;
+        }
+
+        /* Hide the default file input */
+        #faculty_file_ee,#faculty_file_er,#faculty_file_cs,#faculty_file_me,#faculty_file_ce {
+            display: none;
+        }
+
+        .btn {
+            background-color: #6a0dad;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .btn:hover {
+            background-color: #7e24d2;
+        }
+
+        /* File View Section */
+        .file-view {
+            margin-top: 10px;
+        }
+
+        .file-view a {
+            color: #6a0dad;
+            text-decoration: none;
+        }
+
+        .file-view a:hover {
+            text-decoration: underline;
+        }
+
+        .add-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #6a0dad;
+            color: white;
+            border: none;
+            padding: 15px 20px;
+            border-radius: 50%;
+            font-size: 24px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+        }
+        
+        .add-button:hover {
+            background-color: #7e24d2;
+        }
+        .section{
+            display: flex;
+            flex-direction: row;
+            gap: 20px;
+        }
+        .left-section {
+            width: 50%;
+        }
+
+        .right-section {
+            width: 40%;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        th, td {
+            padding: 8px;
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+        th {
+            background-color: #6a0dad;
+            color: white;
+        }
+
+        .download-link {
+            display: block;
+            margin-top: 15px;
+            color: #6a0dad;
+            text-decoration: none;
+            font-size: 16px;
+        }
+
+        .download-link:hover {
+            text-decoration: underline;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <aside class="sidebar">
+            <h1 class="logo">OSAS</h1>
+            <ul class="menu">
+                <li class="menu-item active">Faculty Registration</li>
+                <a href="{% url 'subject' %}"><li class="menu-item">Add Subjects</li></a>
+                <a href="{% url 'student' %}"><li class="menu-item">Students Registration</li></a>
+                <a href="{% url 'timetable' %}"><li class="menu-item">Add Time Table</li></a>
+                <a href="{% url 'logout' %}"><li class="menu-item">Logout</li></a>
+            </ul>
+        </aside>
+
+        <main class="main-content">
+            <header class="header">
+                <h2>Faculty Registration</h2>
+                <div class="user-profile">
+                    <span>Hi, {{ request.session.full_name }}</span>
+                </div>
+            </header>
+
+            <div class="section">
+                <div class="left-section">
+                    {% for department in departments %}
+                    <section class="content">
+                        <form method="POST" enctype="multipart/form-data" action="{% url 'upload_faculty' %}">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <div class="dropdown">Department: {{ department.name }}</div>
+                                <input type="hidden" name="department" value="{{ department.code }}">
+                                <input type="file" id="faculty_file_{{ department.code }}" name="faculty_file" accept=".csv, .xlsx" style="display: none;">
+                                <label for="faculty_file_{{ department.code }}" class="custom-file-upload">Add Faculties</label>
+                            </div>
+                            <div class="form-group">
+                                <button type="submit" class="btn">Submit</button>
+                            </div>
+                        </form>
+                    </section>
+                    {% endfor %}
+                </div>
+    
+                <div class="right-section">
+                    <h3>Sample Timetable</h3>
+                    <table>
+                        <tr>
+                            <th>Day</th>
+                            <th>Period</th>
+                            <th>Subject Code</th>
+                            <th>Faculty ID</th>
+                        </tr>
+                        <tr><td>Monday</td><td>1</td><td>CS107</td><td>FAC018</td></tr>
+                        <tr><td>Monday</td><td>2</td><td>CS107</td><td>FAC018</td></tr>
+                        <tr><td>Monday</td><td>3</td><td>CS107</td><td>FAC018</td></tr>
+                        <tr><td>Monday</td><td>4</td><td>CS107</td><td>FAC018</td></tr>
+                        <tr><td>Monday</td><td>5</td><td>CS107</td><td>FAC018</td></tr>
+                        <tr><td>Monday</td><td>6</td><td>CS107</td><td>FAC018</td></tr>
+                        <tr><td>Monday</td><td>7</td><td>CS107</td><td>FAC018</td></tr>
+                        <tr><td>Tuesday</td><td>1</td><td>CS107</td><td>FAC018</td></tr>
+                        <tr><td>Tuesday</td><td>2</td><td>CS107</td><td>FAC018</td></tr>
+                        <tr><td>Tuesday</td><td>3</td><td>CS107</td><td>FAC018</td></tr>
+                    </table>
+                    <a href="{% static 'timetable_sample.xlsx' %}" class="download-link" download>Download Sample Timetable</a>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <script>
+        document.querySelectorAll("input[type='file']").forEach(input => {
+            input.addEventListener("change", function () {
+                let file = this.files[0];
+                let displaySpan = document.getElementById("selected-file-name-" + this.id.split("_")[2]);
+                if (file) {
+                    displaySpan.textContent = file.name;
+                } else {
+                    displaySpan.textContent = "";
+                }
+            });
+        });
+    </script>
+    
+    
+    
+
+</body>
+</html>

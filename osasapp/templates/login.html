@@ -1,0 +1,82 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Login</title>
+  <link rel="stylesheet" href="{% static 'stylelogin.css'%}">
+</head>
+<body>
+  <div class="body-content">
+    <div class="left-box">
+      <div class="logo">
+        <div class="osas">OSAS</div>
+        <img class="raise-a-hand-to-answer" src="{% static 'raise-a-hand-to-answer0.png'%}" />
+      </div>
+      <div class="heading">
+        <span>Online Student</span>
+        <span>Attendance System</span>
+        <div class="subheading">
+          <span>Streamlining Student Attendance </span>
+          <span>Management with Efficiency and Accuracy</span>
+        </div>
+      </div>
+
+    </div>
+    <div class="right-box">
+      <div class="container">
+        
+        
+        <form action="{% url 'login' %}" method="POST" >
+          {% csrf_token %}
+          <div class="radio-group">
+            <div class="radio-items">
+              <input type="radio" name="user_type" id="student" value="student">
+              <label for="student">Student</label>
+            </div>
+            <div class="radio-items">
+              <input type="radio" name="user_type" id="faculty" value="faculty">
+              <label for="faculty">Faculty</label>
+            </div>
+            <div class="radio-items">
+              <input type="radio" name="user_type" id="admin" value="admin" checked>
+              <label for="admin">Admin</label>
+            </div>
+          </div>
+          <div class="user-details">
+            <div class="user-login" id="name-user">
+              <label for="id">User ID</label>
+              <input type="text" name="id" id="id" placeholder="User ID">
+            </div>
+            <div class="user-login" id="password-user">
+              <label for="userpassword">Password</label>
+              <input type="password" name="password" id="userpassword" placeholder="Password">
+            </div>
+            
+          </div>
+          <div class="signin-btn">
+            <button type="submit">Sign In</button>
+          </div>
+          <div class="register">
+            Don't have an account?
+            <a href="{% url 'register' %}">Register here</a>
+          </div>
+        </form>
+        {% csrf_token %}
+        {% if messages %}
+            <div>
+                {% for message in messages %}
+                    <div class="alert-message {% if message.tags %}{{ message.tags }}{% endif %}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  
+</body>
+</html>

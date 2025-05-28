@@ -1,0 +1,239 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Faculty Registration</title>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@100..900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400..900&display=swap');
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f6f9ff;
+            color: #333;
+        }
+
+        .container {
+            display: flex;
+            height: 100vh;
+            flex-direction: column;
+            justify-content: space-between;
+            width: 100%;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            background-color: #ffffff;
+            color: rgb(9, 8, 8);
+            width: 13%;
+            padding: 20px;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+            padding-top: 10px;
+            height: 100%;
+            position: fixed;
+        }
+
+        .logo {
+            font-size: 40px;
+            margin-bottom: 20px;
+            color: #6a0dad;
+            font-family: "Roboto Condensed", serif;
+        }
+
+        .menu a {
+            text-decoration: none;
+            color: #6a0dad;
+        }
+
+        .menu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .menu-item {
+            margin: 15px 0;
+            cursor: pointer;
+            padding: 10px;
+            padding-left: 30px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+            color: #6a0dad;
+        }
+
+        .menu-item:hover {
+            color: #7e24d2;
+        }
+
+        .menu-item.active {
+            background-color: #6a0dad;
+            color: #fff;
+        }
+
+        /* Main Content */
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            width: 80%;
+            margin-left: auto;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #6a0dad;
+            padding-left: 5px;
+            font-family: "Roboto Condensed", serif;
+            font-size: 20px;
+        }
+
+        .content {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+
+        
+
+        
+        .btn {
+            background-color: #6a0dad;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .btn:hover {
+            background-color: #7e24d2;
+        }
+
+
+        .section{
+            display: flex;
+            flex-direction: row;
+            height: 100%;
+            justify-content: center;
+            gap: 20px;
+        }
+        .subject-container {
+            
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            gap: 20px;
+            display: flex;
+            flex-direction: column;
+            align-content: center;
+            padding-top: 40px;
+            align-items: center;
+            background: white;
+            padding: 30px;
+            display: flex;
+            border-radius: 15px;
+            box-shadow: 10px 10px 15px rgba(67, 1, 82, 0.1);
+            text-align: left;
+            justify-content: space-evenly;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <aside class="sidebar">
+            <h1 class="logo">OSAS</h1>
+            <ul class="menu">
+                <a href="{% url 'profilestu' %}"><li class="menu-item">Profile</li></a>
+                <a href="{% url 'stutimetable' %}"><li class="menu-item">Time Table</li></a>
+                <li class="menu-item active">Attendance</li>
+                <a href="{% url 'logout' %}"><li class="menu-item">Logout</li></a>
+            </ul>
+        </aside>
+        
+        <main class="main-content">
+            <header class="header">
+                <h2>Student List</h2>
+                <div class="user-profile">
+                    
+                </div>
+            </header>
+            
+            <div class="subject-container">
+                {% for subject in attendance_data %}
+                <div class="subject-box" onclick="showAttendanceDetails('{{ subject.subject_name }}', '{{ subject.subject_code }}', {{ subject.total_hours }}, {{ subject.total_present }}, {{ subject.total_absent }})">
+                    <h3>{{ subject.subject_name }} ({{ subject.subject_code }})</h3>
+                    <p>Click for details</p>
+                </div>
+                {% endfor %}
+            </div>
+            
+            <!-- Attendance Modal -->
+            <div id="attendanceModal" class="modal">
+                <div class="modal-content">
+                    <span class="close" onclick="closeModal()">&times;</span>
+                    <h2 id="modalSubject"></h2>
+                    <p><strong>Total Hours:</strong> <span id="modalTotalHours"></span></p>
+                    <p><strong>Total Present:</strong> <span id="modalTotalPresent"></span></p>
+                    <p><strong>Total Absent:</strong> <span id="modalTotalAbsent"></span></p>
+                </div>
+            </div>
+            
+            <style>
+            /* Styling for modal */
+            .modal {
+                display: none;
+                position: fixed;
+                left: 0;
+                top: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(0, 0, 0, 0.5);
+                justify-content: center;
+                align-items: center;
+            }
+            
+            .modal-content {
+                background: white;
+                padding: 20px;
+                border-radius: 8px;
+                width: 50%;
+                text-align: center;
+            }
+            
+            .close {
+                float: right;
+                font-size: 24px;
+                cursor: pointer;
+            }
+            </style>
+            
+            <script>
+            function showAttendanceDetails(name, code, totalHours, totalPresent, totalAbsent) {
+                document.getElementById("modalSubject").innerHTML = `${name} (${code})`;
+                document.getElementById("modalTotalHours").innerHTML = totalHours;
+                document.getElementById("modalTotalPresent").innerHTML = totalPresent;
+                document.getElementById("modalTotalAbsent").innerHTML = totalAbsent;
+                document.getElementById("attendanceModal").style.display = "flex";
+            }
+            
+            function closeModal() {
+                document.getElementById("attendanceModal").style.display = "none";
+            }
+            </script>
+            
+        </main>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,312 @@
+/* Import Google font - Poppins,MarkaziText-Regular,Anton SC */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Markazi+Text:wght@400..700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Anton+SC&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+html,body{
+  height:100%;
+  width: 100%;
+  
+}
+body{
+  /* background: linear-gradient(-60deg,#4B007D 44%,#5F009F 67%,#8D14DD 87%,#BA53FF 120%); */
+  background: linear-gradient(-77.84deg,#4b007d 2.9793044552206993%,#4b007d 10.903532803058624%,#5f009f 47.00336158275604%,#8500dd 66.59656763076782%,#8d14dd 86.69920563697815%,#ba53ff 99.00224804878235%);
+}
+
+.body-content{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+}
+
+/* left box start */
+.left-box{
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  height: 100%;
+  width: 50%;
+  gap: 5%;
+}
+
+/* logo */
+.logo{
+  position: relative;
+  display: flex;
+  height: 30%;
+}
+
+.osas {
+  color: #ffffff;
+  text-align: left;
+  font-family: "MarkaziText-Regular";
+  font-size: 59px;
+  line-height: 76.8px;
+  font-weight: 700;
+  opacity: 0.5;
+  position: absolute;
+  left: 226px;
+  top: 85px;
+  width: 286px;
+  height: 86px;
+}
+.raise-a-hand-to-answer {
+  opacity: 0.5;
+  width: 69px;
+  height: 71px;
+  position: absolute;
+  left: 240px;
+  top: 90px;
+  transform-origin: 0 0;
+  transform: rotate(0deg) scale(-1, 1);
+  object-fit: cover;
+}
+
+/* heading */
+.heading{
+  display: flex;
+  flex-direction: column;
+  height: 45%;
+  justify-content: flex-start;
+  padding-left: 20%;
+}
+.heading span{
+  color: #ffffff;
+  font-family: "Anton Sc";
+  font-size: 8vh;
+  font-weight: 400;
+  font-style: normal;
+  line-height: 1.5;
+}
+.subheading span{
+  font-family: "Roboto";
+  display: flex;
+  justify-content: flex-start;
+  font-size: 2.8vh;
+  font-weight: 350;
+  letter-spacing: 2px;
+}
+.subheading{
+  padding-top: 5%;
+  display: flex;
+  flex-direction: column;
+  height: 50%;
+  width: 100%;
+}
+
+/* left box end  */
+/* right box start */
+.right-box{
+  height: 100%;
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+/* container start */
+.container{
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  border-radius: 15px;
+  height: 75%;
+  width: 73%;
+  padding: 5%;
+  padding-top: 6%;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  justify-content: space-between;
+  
+}
+
+/* radio */
+.radio-group{
+  margin-top: 8%;
+  display: flex;
+  justify-content: space-evenly;
+  height: 20%;
+  margin-bottom: 20px;
+}
+.radio-items {
+  display: flex;
+  align-items: center;
+  border: 2px solid #4B007D;
+  box-sizing: border-box;
+  border-radius: 15px; 
+  padding: 0vh 2.8vh;
+  margin: 0.5vh;
+  color: #4B007D;
+  cursor: pointer;
+}
+.radio-items input[type="radio"] {
+  display: none; /* Hide the default radio button */
+}
+
+.radio-items label {
+  position: relative;
+  padding-left: 30px; /* Space for the custom radio */
+  cursor: pointer;
+}
+
+.radio-items label::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 15px; /* Size of the custom radio */
+  height: 15px; /* Size of the custom radio */
+  border: 2px solid #4B007D; /* Border color */
+  border-radius: 50%; /* Make it circular */
+  background-color: white; /* Background color */
+  transition: background-color 0.3s, border-color 0.3s; /* Smooth transition */
+}
+
+.radio-items input[type="radio"]:checked + label::before {
+  background-color: white; /* Background color when checked */
+  border-color: #5F009F; /* Border color when checked */
+}
+
+.radio-items input[type="radio"]:checked + label::after {
+  content: '';
+  position: absolute;
+  left: 4px; /* Position of the inner dot */
+  top: 50%;
+  transform: translateY(-50%);
+  width: 10px; /* Size of the inner dot */
+  height: 10px; /* Size of the inner dot */
+  border-radius: 50%; /* Make it circular */
+  background-color: #4B007D; /* Inner dot color */
+}
+
+.radio-items input[type="radio"] {
+  margin-right: 8px; /* Space between radio button and label */
+}
+
+/* user details */
+.user-details {
+  margin-top: 5%;
+  display: flex;
+  flex-direction: column; /* Stack input fields vertically */
+  height: 50%;
+
+
+}
+
+.user-login {
+  margin-bottom: 5%; /* Space between input fields */
+}
+
+.user-login label {
+  margin-bottom: 5px; /* Space between label and input */
+  font-weight: 200px;
+  padding-left: 5px;
+  font-size: small; 
+  color: #4B007D;
+}
+
+.user-login input[type="text"],
+.user-login input[type="password"] {
+  padding: 10px; /* Inner padding for input fields */
+  border: 2px solid #4B007D; /* Border for input fields */
+  border-radius: 5px; /* Rounded corners for input fields */
+  width: 100%; /* Full width of the container */
+  box-sizing: border-box;
+  transition: border 0.3s; /* Smooth transition for border change */
+}
+
+.user-login input[type="text"]:focus,
+.user-login input[type="password"]:focus {
+  border: 2px solid #5F009F; /* Change border to 3px on focus */
+  outline: none; /* Remove default outline */
+}
+.signin-btn {
+  display: flex;
+  justify-content: flex-start; /* Center the button */
+  margin-bottom: 15px; 
+  text-align: center;
+}
+
+.signin-btn button {
+  margin-top: 10px;
+  padding: 10px 20px; /* Padding for the button */
+  background-color: #4B007D; /* Button background color */
+  color: white; /* Button text color */
+  border: none; /* Remove border */
+  border-radius: 5px; /* Rounded corners for button */
+  cursor: pointer; /* Pointer cursor on hover */
+  font-size: 16px; /* Font size for button text */
+  transition: background-color 0.3s; /* Smooth transition for hover effect */
+}
+
+.signin-btn button:hover {
+  background-color: #5F009F; /* Darker shade on hover */
+}
+
+.register {
+  text-align: center; /* Center the register text */
+  font-size: 14px; /* Font size for register text */
+  height: 20%;
+  display: flex;
+  justify-content: flex-start;
+  text-align: center;
+  margin-top: auto;
+
+}
+
+.register a {
+  color: #4B007D; /* Link color */
+  text-decoration: none; /* Remove underline from link */
+}
+
+.register a:hover {
+  text-decoration: underline; /* Underline on hover */
+}
+
+/* Alert message styles */
+.alert-message {
+  padding: 15px; /* Padding around the message */
+  border-radius: 5px; /* Rounded corners */
+  margin-bottom: 20px; /* Space below the message */
+  width: 100%; /* Full width of the container */
+  box-sizing: border-box; /* Include padding and border in the element's total width and height */
+  font-size: 16px; /* Font size for the message text */
+}
+
+/* Success message styles */
+.alert-message.success {
+  background-color: #d4edda; /* Light green background */
+  color: #155724; /* Dark green text */
+  border: 1px solid #c3e6cb; /* Green border */
+}
+
+/* Error message styles */
+.alert-message.error {
+  background-color: #f8d7da; /* Light red background */
+  color: #721c24; /* Dark red text */
+  border: 1px solid #f5c6cb; /* Red border */
+}
+
+/* Info message styles */
+.alert-message.info {
+  background-color: #d1ecf1; /* Light blue background */
+  color: #0c5460; /* Dark blue text */
+  border: 1px solid #bee5eb; /* Blue border */
+}
+
+/* Warning message styles */
+.alert-message.warning {
+  background-color: #fff3cd; /* Light yellow background */
+  color: #856404; /* Dark yellow text */
+  border: 1px solid #ffeeba; /* Yellow border */
+}
